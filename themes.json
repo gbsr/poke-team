@@ -18,20 +18,20 @@
 		"--secondary-color": "#8F9779",
 		"--accent-color": "#007FFF",
 		"--background-color": "#FF6F61",
-		"--text-color": "#000001"
+		"--text-color": "#000100"
 	},
 	"jigglypuff": {
 		"--primary-color": "#FFB6C1",
 		"--secondary-color": "#A020F0",
 		"--accent-color": "#87CEEB",
 		"--background-color": "#F0F8FF",
-		"--text-color": "#000000"
+		"--text-color": "#000100"
 	},
 	"eeveelutions": {
 		"--primary-color": "#007FFF",
 		"--secondary-color": "#FFD700",
 		"--accent-color": "#FF4500",
 		"--background-color": "#8A2BE2",
-		"--text-color": "#DAA520"
+		"--text-color": "#000100"
 	}
 }
