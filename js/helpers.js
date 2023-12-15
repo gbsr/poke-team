@@ -7,6 +7,8 @@ let lastFetchedTime = localStorage.getItem('lastFetchedTime') ? new Date(localSt
 let pokemons = localStorage.getItem('pokemons') ? JSON.parse(localStorage.getItem('pokemons')) : null;
 
 async function getData(URL) {
+
+
 	if (!pokemons || !lastFetchedTime || new Date() - lastFetchedTime > 3 * 24 * 60 * 1000) {
 		return new Promise((resolve, reject) => {
 
@@ -29,9 +31,9 @@ async function getData(URL) {
 	}
 }
 
-async function fetchPokemons() {
+async function fetchPokemons(URL) {
 	try {
-		let pokemons = await getData('https://pokeapi.co/api/v2/pokemon?limit=100000');
+		let pokemons = await getData(URL);
 		localStorage.setItem('pokemons', JSON.stringify(pokemons));
 		localStorage.setItem('lastFetchedTime', new Date().toISOString());
 	} catch (error) {
@@ -39,5 +41,12 @@ async function fetchPokemons() {
 	}
 }
 
+function createElement(type, className, text) {
+	const element = document.createElement(type);
+	element.classList.add(className);
+	element.textContent = text;
+	return element;
+}
 
-export { getData, fetchPokemons };
+
+export { getData, fetchPokemons, createElement };
