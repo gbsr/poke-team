@@ -39,7 +39,7 @@ function setTheme(themeName, themes) {
 			const root = document.documentElement;
 			for (const [key, value] of Object.entries(theme.values)) {
 				root.style.setProperty(key, value);
-				console.log(`Root property set: ${key} = ${value}`);
+				// console.log(`Root property set: ${key} = ${value}`);
 			}
 			console.log(`Theme '${themeName}' set`);
 			// store it to tretrive it later

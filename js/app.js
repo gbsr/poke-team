@@ -1,4 +1,5 @@
 import { fetchThemes, setTheme, createThemeSelector } from './themes.js';
+import { fetchPokemons, getData } from './helpers.js';
 
 // ------------ Theme handling -------------------
 // Fetch the themes and set the default theme (pikachu)
@@ -19,3 +20,9 @@ fetchThemes().then(async themes => {
 });
 
 // ----------------- Pokemon handling ------------------- //
+fetchPokemons().then(() => {
+	console.log('Pokemons fetched');
+
+}).catch(error => {
+	console.error('Error fetching pokemons', error);
+});
