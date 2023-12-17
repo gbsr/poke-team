@@ -89,20 +89,19 @@ function renderData(data, headerText) {
 
 	const header = document.createElement('h2');
 	header.textContent = headerText;
+	container.appendChild(header);
 
 	const card = document.createElement('div');
 	card.classList.add('data-card');
-
-	for (let item in data) {
-		// TODO: Change into something more interesting later on
-		let info = createElement('p');
-		info.textContent = `${item}: ${JSON.stringify(data[item])}`;
-		card.appendChild(info);
-	}
-
-	container.appendChild(header);
 	container.appendChild(card);
 
+	// create the cards for each data item
+	data.forEach((item, index) => {
+		const card = document.createElement('div');
+		card.classList.add('data-card');
+		container.appendChild(card);
+	});
+	console.log('rendering data..');
 	return container;
 }
 
