@@ -50,6 +50,7 @@ function searchPokemons(searchInput) {
 		// If the team container is visible, hide it
 		if (teamContainer && teamContainer.innerHTML !== '') {
 			teamContainer.innerHTML = '';
+
 		}
 		// waits for all the promises to resolve
 		Promise.all(endpoints.map(endpoint => {
@@ -64,6 +65,9 @@ function searchPokemons(searchInput) {
 		})).then(() => {
 			// and then we can use it
 			localStorage.setItem('storedEndpoints', JSON.stringify(storedEndpoints));
+
+			let resultsRendered = renderData(filteredResults, 'Search Results');
+			document.body.appendChild(resultsRendered);
 		});
 	});
 }
@@ -75,33 +79,30 @@ getTeam().then(team => {
 
 const manageTeamBtn = document.querySelector('.btn-team');
 manageTeamBtn.addEventListener('pointerdown', function () {
-	let teamContainer = renderTeam(team);
+	let teamContainer = renderData(team, 'Current Team');
 	document.body.appendChild(teamContainer);
 });
 
-function renderTeam(team) {
-	const teamContainer = document.createElement('div');
-	teamContainer.classList.add('team-container');
+function renderData(data, headerText) {
+	const container = document.createElement('div');
+	container.classList.add('data-container');
 
-	const teamHeader = document.createElement('h2');
-	teamHeader.textContent = 'Current team:';
+	const header = document.createElement('h2');
+	header.textContent = headerText;
 
-	const pokemonCard = document.createElement('div');
-	pokemonCard.classList.add('pokemon-card');
+	const card = document.createElement('div');
+	card.classList.add('data-card');
 
-	// get the pokemons stored in team.json
-	for (let pokemon in team) {
-		let pokemonInfo = document.createElement('p');
-		pokemonInfo.textContent = `${pokemon}: ${JSON.stringify(team[pokemon])}`;
-		pokemonCard.appendChild(pokemonInfo);
+	for (let item in data) {
+		// TODO: Change into something more interesting later on
+		let info = createElement('p');
+		info.textContent = `${item}: ${JSON.stringify(data[item])}`;
+		card.appendChild(info);
 	}
 
-	teamContainer.appendChild(teamHeader);
-	teamContainer.appendChild(pokemonCard);
+	container.appendChild(header);
+	container.appendChild(card);
 
-	// note, this return a DOM element, so needs to be called like so:
-	// let element = renderTeam(team)();
-
-	return teamContainer;
+	return container;
 }
 

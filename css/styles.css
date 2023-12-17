@@ -31,7 +31,7 @@ form {
 }
 
 .header-content,
-.team-container {
+.data-container {
 	display: flex;
 	align-items: center;
 	justify-content: center;
