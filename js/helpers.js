@@ -49,4 +49,30 @@ function createElement(type, className, text) {
 }
 
 
-export { getData, fetchPokemons, createElement };
+async function getTeam() {
+	try {
+		let team = localStorage.getItem('team');
+
+		// If the themes are not in localStorage, fetch them
+		if (!team) {
+			const response = await fetch('team.json');
+			if (!response.ok) {
+				throw new Error(`Failed to fetch team. Status: ${response.status}`);
+			}
+			team = await response.json();
+
+			// Convert the team object into an array of team objects
+			team = Object.entries(team).map(([name, values]) => ({ name, values }));
+
+			localStorage.setItem('team', JSON.stringify(team));
+		} else {
+			// If the themes are in localStorage, parse them
+			team = JSON.parse(team);
+		}
+		return team;
+	} catch (error) {
+		console.error('Error fetching team:', error);
+	}
+}
+
+export { getData, fetchPokemons, createElement, getTeam };

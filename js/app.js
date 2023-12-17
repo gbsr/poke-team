@@ -1,5 +1,5 @@
 import { fetchThemes, setTheme, createThemeSelector } from './themes.js';
-import { fetchPokemons, getData } from './helpers.js';
+import { fetchPokemons, getTeam } from './helpers.js';
 
 // ------------ Theme handling -------------------
 // Fetch the themes and set the default theme (pikachu)
@@ -20,6 +20,7 @@ fetchThemes().then(async themes => {
 });
 
 // ----------------- Pokemon handling ------------------- //
+// 
 fetchPokemons('https://pokeapi.co/api/v2/pokemon?limit=100000').then(() => {
 	console.log('Pokemons fetched');
 
@@ -62,3 +63,6 @@ function searchPokemons(searchInput) {
 	});
 }
 
+getTeam().then(team => {
+	console.log('team gathered. Team consist of:', team);
+});
