@@ -66,7 +66,7 @@ function searchPokemons(searchInput) {
 			// and then we can use it
 			localStorage.setItem('storedEndpoints', JSON.stringify(storedEndpoints));
 
-			let resultsRendered = renderData(Object.values(storedEndpoints), 'Search Results');
+			let resultsRendered = renderData(Object.values(storedEndpoints), cardContainer, traversalContainer);
 			document.body.appendChild(resultsRendered);
 		});
 	});
@@ -85,15 +85,18 @@ manageTeamBtn.addEventListener('pointerdown', function () {
 
 
 // create static elements for the card container
-const { cardContainer, prevButton, nextButton } = buildTraversalForCardResults();
-function buildTraversalForCardResults() {
-	const container = document.createElement('div');
-	container.classList.add('data-container');
+const { cardContainer, traversalContainer } = buildTraversalForCardResults();
 
+function buildTraversalForCardResults() {
+
+	// container for the cards
 	const cardContainer = document.createElement('div');
 	cardContainer.classList.add('data-cardContainer');
 
+	// buttons
 	const prevButton = document.createElement('button');
+	const traversalContainer = document.createElement('div');
+	traversalContainer.classList.add('traversal-container');
 	prevButton.classList.add('prev-button'); // Add a class for selector
 	prevButton.textContent = '<';
 	prevButton.addEventListener('pointerdown', function () {
@@ -108,29 +111,31 @@ function buildTraversalForCardResults() {
 	});
 
 	// Append static elements to the container
-	container.appendChild(cardContainer);
-	return { cardContainer, prevButton, nextButton };
+	traversalContainer.appendChild(prevButton);
+	traversalContainer.appendChild(nextButton);
+
+	return { cardContainer, traversalContainer };
 }
 
-function renderData(data, headerText) {
+function renderData(data, cardContainer, traversalContainer) {
 
 	// clear before running
 	cardContainer.innerHTML = '';
+
 	// create the cards for each data item
 	data.forEach((item, index) => {
 		const card = document.createElement('div');
 		card.classList.add('data-card');
+
 		// hide all cards but first
 		if (index !== 0) {
 			card.style.display = 'none';
 		}
-		// card.appendChild(info);
 		cardContainer.appendChild(card);
 
 		let pokemonName = document.createElement('h3');
 		pokemonName.textContent = item.name;
 		card.appendChild(pokemonName);
-
 
 		item.abilities.forEach(ability => {
 			if (ability && ability.ability) {
@@ -139,11 +144,8 @@ function renderData(data, headerText) {
 				card.appendChild(abilityInfo);
 			}
 		});
-
 	});
-
-	cardContainer.appendChild(prevButton);
-	cardContainer.appendChild(nextButton);
+	cardContainer.appendChild(traversalContainer);
 	return cardContainer;
 }
 
