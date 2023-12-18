@@ -43,9 +43,14 @@ form {
 	padding: 0 calc(1rem + 5vw);
 }
 
-.data-card {
-	width: 100%;
-	height: 100%;
+.traversal-container {
+	display: flex;
+	justify-content: space-around;
+}
+
+.data-cardContainer {
+	/* width: 100%; */
+	/* height: 100%; */
 	padding: 1rem;
 	border-radius: 0.35rem;
 	border: 2px black;

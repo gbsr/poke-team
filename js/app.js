@@ -66,7 +66,7 @@ function searchPokemons(searchInput) {
 			// and then we can use it
 			localStorage.setItem('storedEndpoints', JSON.stringify(storedEndpoints));
 
-			let resultsRendered = renderData(filteredResults, 'Search Results');
+			let resultsRendered = renderData(Object.values(storedEndpoints), 'Search Results');
 			document.body.appendChild(resultsRendered);
 		});
 	});
@@ -83,25 +83,85 @@ manageTeamBtn.addEventListener('pointerdown', function () {
 	document.body.appendChild(teamContainer);
 });
 
-function renderData(data, headerText) {
+
+// create static elements for the card container
+const { cardContainer, prevButton, nextButton } = buildTraversalForCardResults();
+function buildTraversalForCardResults() {
 	const container = document.createElement('div');
 	container.classList.add('data-container');
 
-	const header = document.createElement('h2');
-	header.textContent = headerText;
-	container.appendChild(header);
+	const cardContainer = document.createElement('div');
+	cardContainer.classList.add('data-cardContainer');
 
-	const card = document.createElement('div');
-	card.classList.add('data-card');
-	container.appendChild(card);
+	const prevButton = document.createElement('button');
+	prevButton.classList.add('prev-button'); // Add a class for selector
+	prevButton.textContent = '<';
+	prevButton.addEventListener('pointerdown', function () {
+		switchCard(cardContainer, -1);
+	});
 
+	const nextButton = document.createElement('button');
+	nextButton.classList.add('next-button'); // Add a class for selector
+	nextButton.textContent = '>';
+	nextButton.addEventListener('pointerdown', function () {
+		switchCard(cardContainer, 1);
+	});
+
+	// Append static elements to the container
+	container.appendChild(cardContainer);
+	return { cardContainer, prevButton, nextButton };
+}
+
+function renderData(data, headerText) {
+
+	// clear before running
+	cardContainer.innerHTML = '';
 	// create the cards for each data item
 	data.forEach((item, index) => {
 		const card = document.createElement('div');
 		card.classList.add('data-card');
-		container.appendChild(card);
+		// hide all cards but first
+		if (index !== 0) {
+			card.style.display = 'none';
+		}
+		// card.appendChild(info);
+		cardContainer.appendChild(card);
+
+		let pokemonName = document.createElement('h3');
+		pokemonName.textContent = item.name;
+		card.appendChild(pokemonName);
+
+
+		item.abilities.forEach(ability => {
+			if (ability && ability.ability) {
+				let abilityInfo = document.createElement('p');
+				abilityInfo.textContent = ability.ability.name;
+				card.appendChild(abilityInfo);
+			}
+		});
+
 	});
-	console.log('rendering data..');
-	return container;
+
+	cardContainer.appendChild(prevButton);
+	cardContainer.appendChild(nextButton);
+	return cardContainer;
+}
+
+function switchCard(cardContainer, direction) {
+	const cards = Array.from(cardContainer.querySelectorAll('.data-card'));
+	const currentCardIndex = cards.findIndex(card => card.style.display !== 'none');
+	let nextCardIndex = currentCardIndex + direction;
+
+	let filteredEndpoints = Object.values(storedEndpoints).filter(pokemon => pokemon.name.includes(searchInput.value));
+
+	if (nextCardIndex < 0) {
+		nextCardIndex = filteredEndpoints.length - 1; // Wrap around to the last card
+	} else if (nextCardIndex >= filteredEndpoints.length) {
+		nextCardIndex = 0; // Wrap around to the first card
+	}
+
+	cards[currentCardIndex].style.display = 'none';
+	cards[nextCardIndex].style.display = 'block';
+	console.log('siwtching cards.');
 }
 

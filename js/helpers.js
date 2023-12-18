@@ -1,6 +1,3 @@
-
-
-
 // ----------------- Pokemon handling ------------------- //
 
 let lastFetchedTime = localStorage.getItem('lastFetchedTime') ? new Date(localStorage.getItem('lastFetchedTime')) : null;
@@ -47,7 +44,6 @@ function createElement(type, className, text) {
 	element.textContent = text;
 	return element;
 }
-
 
 async function getTeam() {
 	try {
