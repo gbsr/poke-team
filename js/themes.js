@@ -78,7 +78,7 @@ function createThemeSelector(themes) {
 				const option = document.createElement('div');
 				option.classList.add('dropdown-option');
 				option.textContent = theme.name;
-				option.addEventListener('click', function () {
+				option.addEventListener('pointerdown', function () {
 
 					// switch only if we have a new theme
 					const selectedTheme = localStorage.getItem('selectedTheme');
@@ -91,19 +91,20 @@ function createThemeSelector(themes) {
 			});
 		}
 
-		dropdown.addEventListener('mouseover', function () {
+		dropdown.addEventListener('pointerdown', function () {
 			const options = dropdown.querySelectorAll('.dropdown-option');
 			options.forEach(option => {
-				option.classList.add('dropdown-hover');
+				option.classList.toggle('dropdown-hover');
 			});
+			placeholder.classList.toggle('dropdown-hide');
 		});
 
-		dropdown.addEventListener('mouseout', function () {
-			const options = dropdown.querySelectorAll('.dropdown-option');
-			options.forEach(option => {
-				option.classList.remove('dropdown-hover');
-			});
-		});
+		// dropdown.addEventListener('pointerdown', function () {
+		// 	const options = dropdown.querySelectorAll('.dropdown-option');
+		// 	options.forEach(option => {
+		// 		option.classList.remove('dropdown-hover');
+		// 	});
+		// });
 	}
 	return dropdown; // Return the dropdown
 }

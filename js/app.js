@@ -11,7 +11,7 @@ fetchThemes().then(async themes => {
 	// Add an event listener to each option
 	const options = dropdown.querySelectorAll('.dropdown-option');
 	options.forEach(option => {
-		option.addEventListener('click', function () {
+		option.addEventListener('pointerdown', function () {
 			setTheme(this.textContent, themes);
 		});
 	});

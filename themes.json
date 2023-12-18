@@ -11,13 +11,13 @@
 		"--secondary-color": "#CD5241",
 		"--accent-color": "#E64110",
 		"--background-color": "#207394",
-		"--text-color": "#000100"
+		"--text-color": "#fff"
 	},
 	"squirtle": {
-		"--primary-color": "#00FFFF",
-		"--secondary-color": "#8F9779",
-		"--accent-color": "#007FFF",
-		"--background-color": "#FF6F61",
+		"--primary-color": "#8F9779",
+		"--secondary-color": "#007FFF",
+		"--accent-color": "#FF6F61",
+		"--background-color": "#007FFF",
 		"--text-color": "#000100"
 	},
 	"jigglypuff": {
