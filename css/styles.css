@@ -113,6 +113,10 @@ form {
 	padding: 0.5rem !important;
 }
 
+.pokeImg {
+	width: 80%;
+}
+
 .btn {
 	flex-grow: 0;
 	flex-shrink: 0;

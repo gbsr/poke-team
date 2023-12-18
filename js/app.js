@@ -37,7 +37,7 @@ searchPokemons(searchInput);
 let storedEndpoints = JSON.parse(localStorage.getItem('storedEndpoints')) || {};
 
 
-// TODO: Figure out a better way to not overload the API but also not potentially max out local storage?
+// TODO: Limit search to minimum of 3 characters
 
 function searchPokemons(searchInput) {
 	document.getElementById('search').addEventListener('submit', function (event) {
@@ -122,20 +122,41 @@ function renderData(data, cardContainer, traversalContainer) {
 	// clear before running
 	cardContainer.innerHTML = '';
 
+	let firstAvailableImage = null;
+
 	// create the cards for each data item
 	data.forEach((item, index) => {
 		const card = document.createElement('div');
 		card.classList.add('data-card');
 
+		cardContainer.appendChild(card);
+		const pokeImg = document.createElement('img');
+		pokeImg.classList.add('pokeImg');
+		// image error handling because API inconsistency >.<
+		if (item.sprites.front_default) {
+			pokeImg.src = item.sprites.front_default;
+
+			// Update firstAvailableImage when you find the first image URL
+			if (!firstAvailableImage) {
+				firstAvailableImage = item.sprites.front_default;
+			}
+		} else {
+			// Use firstAvailableImage as the default image URL
+			pokeImg.src = firstAvailableImage;
+		}
+		// pokeImg.src = item.sprites.front_default;
+		console.log('img src=', pokeImg.src);
+
 		// hide all cards but first
 		if (index !== 0) {
 			card.style.display = 'none';
 		}
-		cardContainer.appendChild(card);
+
 
 		let pokemonName = document.createElement('h3');
 		pokemonName.textContent = item.name;
 		card.appendChild(pokemonName);
+		card.appendChild(pokeImg);
 
 		item.abilities.forEach(ability => {
 			if (ability && ability.ability) {
