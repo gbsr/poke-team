@@ -48,12 +48,6 @@ form {
 	padding-top: 0.5rem;
 }
 
-.traversal-container {
-	display: flex;
-	justify-content: space-between;
-	transform: translateY(0.65rem);
-}
-
 .pokemon-display {
 	display: flex;
 	flex-direction: column;
@@ -66,8 +60,8 @@ form {
 	color: var(--text-color);
 }
 
-.prev-button,
-.next-button {
+.add-btn {
+	align-self: flex-end;
 	border-radius: 0.35rem;
 	border: 1px solid black;
 	box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.216);
@@ -84,7 +78,7 @@ form {
 	margin: 0 auto;
 	width: 100%;
 	max-height: 350px;
-	overflow-y: auto;
+	overflow-y: scroll;
 	max-width: 22rem;
 	padding: 1rem;
 	gap: 1rem;
@@ -101,10 +95,20 @@ form {
 	box-shadow: 0px 0px 1px var(--primary-color);
 }
 
+.ability-container {
+	display: flex;
+	justify-items: space-between;
+	flex-direction: column;
+}
+
 .teamContainer,
 .btn-row {
 	display: flex;
 	justify-content: center;
+}
+
+p {
+	margin: 0.15rem;
 }
 
 .text-logo {

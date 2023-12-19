@@ -46,11 +46,6 @@ function searchPokemons(searchInput) {
 		let filteredResults = searchResults.results.filter(pokemon => pokemon.name.includes(searchInput.value));
 		let endpoints = filteredResults.map(pokemon => `https://pokeapi.co/api/v2/pokemon/${pokemon.name}/`);
 
-		let teamContainer = document.querySelector('.team-container');
-		// If the team container is visible, hide it
-		if (teamContainer && teamContainer.innerHTML !== '') {
-			teamContainer.innerHTML = '';
-		}
 
 		// waits for all the promises to resolve
 		Promise.all(endpoints.map(endpoint => {
@@ -68,13 +63,8 @@ function searchPokemons(searchInput) {
 			}
 		})).then((storedEndpoints) => {
 			// and then we can use it
-			let resultsRendered = renderData(Object.values(storedEndpoints), cardContainer, traversalContainer);
+			let resultsRendered = renderData(Object.values(storedEndpoints), cardContainer);
 			document.body.appendChild(resultsRendered);
-
-			const resultsFound = document.createElement('p');
-			resultsFound.classList.add('results-found');
-			resultsFound.textContent = 'Results Found: ' + Object.keys(storedEndpoints).length;
-			teamContainer.prepend(resultsFound);
 		});
 	});
 }
@@ -92,39 +82,17 @@ manageTeamBtn.addEventListener('pointerdown', function () {
 
 
 // create static elements for the card container
-const { cardContainer, traversalContainer } = buildTraversalForCardResults();
+const { cardContainer } = buildCardContainer();
 
-function buildTraversalForCardResults() {
+function buildCardContainer() {
 
 	// container for the cards
 	const cardContainer = document.createElement('div');
 	cardContainer.classList.add('data-cardContainer');
-
-	// buttons
-	const prevButton = document.createElement('button');
-	const traversalContainer = document.createElement('div');
-	traversalContainer.classList.add('traversal-container');
-	prevButton.classList.add('prev-button'); // Add a class for selector
-	prevButton.textContent = '<';
-	prevButton.addEventListener('pointerdown', function () {
-		switchCard(cardContainer, -1);
-	});
-
-	const nextButton = document.createElement('button');
-	nextButton.classList.add('next-button'); // Add a class for selector
-	nextButton.textContent = '>';
-	nextButton.addEventListener('pointerdown', function () {
-		switchCard(cardContainer, 1);
-	});
-
-	// Append static elements to the container
-	traversalContainer.appendChild(prevButton);
-	traversalContainer.appendChild(nextButton);
-
-	return { cardContainer, traversalContainer };
+	return { cardContainer };
 }
 
-function renderData(data, cardContainer, traversalContainer) {
+function renderData(data, cardContainer) {
 
 	// clear before running
 	cardContainer.innerHTML = '';
@@ -170,19 +138,23 @@ function renderData(data, cardContainer, traversalContainer) {
 
 		card.appendChild(pokemonDisplay);
 
+		const abilityContainer = document.createElement('div');
+		abilityContainer.classList.add('ability-container');
+
 		item.abilities.forEach(ability => {
 			if (ability && ability.ability) {
 				let abilityInfo = document.createElement('p');
 				abilityInfo.textContent = ability.ability.name;
-				card.appendChild(abilityInfo);
+				abilityContainer.appendChild(abilityInfo);
 			}
 		});
 
 		const addButton = document.createElement('button');
-		addButton.classList.add('add-button');
-		addButton.textContent = 'Add to Team';
+		addButton.classList.add('add-btn');
+		addButton.textContent = '+';
+		abilityContainer.appendChild(addButton);
+		card.appendChild(abilityContainer);
 	});
-	cardContainer.appendChild(traversalContainer);
 	return cardContainer;
 }
 
