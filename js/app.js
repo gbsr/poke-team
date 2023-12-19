@@ -59,17 +59,25 @@ function searchPokemons(searchInput) {
 					.then(response => response.json())
 					.then(data => {
 						storedEndpoints[endpoint] = data;
+						return storedEndpoints[endpoint];
 					})
 					.catch(error => console.error('Error:', error));
 			}
-		})).then(() => {
+		})).then((storedEndpoints) => {
 			// and then we can use it
 			localStorage.setItem('storedEndpoints', JSON.stringify(storedEndpoints));
 
 			let resultsRendered = renderData(Object.values(storedEndpoints), cardContainer, traversalContainer);
 			document.body.appendChild(resultsRendered);
+
+			const resultsFound = document.createElement('p');
+			resultsFound.classList.add('results-found');
+			resultsFound.textContent = 'Results Found: ' + Object.keys(storedEndpoints).length;
+			document.body.appendChild(resultsFound);
 		});
 	});
+
+
 }
 
 const team = {};
@@ -155,8 +163,13 @@ function renderData(data, cardContainer, traversalContainer) {
 
 		let pokemonName = document.createElement('h3');
 		pokemonName.textContent = item.name;
-		card.appendChild(pokemonName);
-		card.appendChild(pokeImg);
+
+		const pokemonDisplay = document.createElement('div');
+		pokemonDisplay.classList.add('pokemon-display');
+		pokemonDisplay.appendChild(pokemonName);
+		pokemonDisplay.appendChild(pokeImg);
+
+		card.appendChild(pokemonDisplay);
 
 		item.abilities.forEach(ability => {
 			if (ability && ability.ability) {

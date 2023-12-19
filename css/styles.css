@@ -54,6 +54,16 @@ form {
 	transform: translateY(0.65rem);
 }
 
+.pokemon-display {
+	display: flex;
+	justify-content: space-between;
+}
+
+.results-found {
+	font-weight: 700;
+	color: var(--text-color);
+}
+
 .prev-button,
 .next-button {
 	border-radius: 0.35rem;
@@ -185,7 +195,7 @@ label {
 }
 
 input {
-	color: black;
+	color: var(--text-color);
 	margin-top: 0.5rem;
 	background: var(--background-color);
 	padding: 0.35rem;
