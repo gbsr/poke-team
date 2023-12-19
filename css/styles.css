@@ -56,7 +56,9 @@ form {
 
 .pokemon-display {
 	display: flex;
-	justify-content: space-between;
+	flex-direction: column;
+	align-items: center;
+	height: 180px;
 }
 
 .results-found {
@@ -81,13 +83,25 @@ form {
 .data-cardContainer {
 	margin: 0 auto;
 	width: 100%;
+	max-height: 350px;
+	overflow-y: auto;
 	max-width: 22rem;
 	padding: 1rem;
+	gap: 1rem;
 	border-radius: 0.35rem;
 	border: 2px black;
-	background: var(--secondary-color);
 }
 
+.data-card {
+	margin-top: 1rem;
+	padding: 0.5rem;
+	border-radius: 0.35rem;
+	background: #141414;
+	color: var(--text-color);
+	box-shadow: 0px 0px 1px var(--primary-color);
+}
+
+.teamContainer,
 .btn-row {
 	display: flex;
 	justify-content: center;
@@ -124,7 +138,8 @@ form {
 }
 
 .pokeImg {
-	width: 80%;
+	width: 140px;
+	transform: translateY(-1.5rem);
 }
 
 .btn {

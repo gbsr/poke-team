@@ -9,29 +9,29 @@
 	"charizard": {
 		"--primary-color": "#EE8329",
 		"--secondary-color": "#CD5241",
-		"--accent-color": "#E64110",
-		"--background-color": "#207394",
-		"--text-color": "#fff"
+		"--accent-color": "#094152",
+		"--background-color": "#094152",
+		"--text-color": "#ffd511"
 	},
 	"squirtle": {
-		"--primary-color": "#8F9779",
-		"--secondary-color": "#007FFF",
-		"--accent-color": "#FF6F61",
-		"--background-color": "#007FFF",
-		"--text-color": "#000100"
+		"--primary-color": "#8bc5ce",
+		"--secondary-color": "#ffe69c",
+		"--accent-color": "#21201f",
+		"--background-color": "#3f4445",
+		"--text-color": "#8bc5ce"
 	},
 	"jigglypuff": {
 		"--primary-color": "#FFB6C1",
-		"--secondary-color": "#A020F0",
-		"--accent-color": "#87CEEB",
-		"--background-color": "#F0F8FF",
-		"--text-color": "#000100"
+		"--secondary-color": "#363238",
+		"--accent-color": "#114a8b",
+		"--background-color": "#323034",
+		"--text-color": "#f2acc3"
 	},
 	"eeveelutions": {
-		"--primary-color": "#007FFF",
-		"--secondary-color": "#FFD700",
-		"--accent-color": "#FF4500",
-		"--background-color": "#8A2BE2",
-		"--text-color": "#000100"
+		"--primary-color": "#d59c4a",
+		"--secondary-color": "#e7c594",
+		"--accent-color": "#1b1811",
+		"--background-color": "#623a28",
+		"--text-color": "#ffe6ac"
 	}
 }

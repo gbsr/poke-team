@@ -50,8 +50,8 @@ function searchPokemons(searchInput) {
 		// If the team container is visible, hide it
 		if (teamContainer && teamContainer.innerHTML !== '') {
 			teamContainer.innerHTML = '';
-
 		}
+
 		// waits for all the promises to resolve
 		Promise.all(endpoints.map(endpoint => {
 			if (!storedEndpoints[endpoint]) {
@@ -59,25 +59,24 @@ function searchPokemons(searchInput) {
 					.then(response => response.json())
 					.then(data => {
 						storedEndpoints[endpoint] = data;
+						localStorage.setItem('storedEndpoints', JSON.stringify(storedEndpoints)); // Save to localStorage
 						return storedEndpoints[endpoint];
 					})
 					.catch(error => console.error('Error:', error));
+			} else {
+				return Promise.resolve(storedEndpoints[endpoint]); // Return a promise that resolves to storedEndpoints[endpoint]
 			}
 		})).then((storedEndpoints) => {
 			// and then we can use it
-			localStorage.setItem('storedEndpoints', JSON.stringify(storedEndpoints));
-
 			let resultsRendered = renderData(Object.values(storedEndpoints), cardContainer, traversalContainer);
 			document.body.appendChild(resultsRendered);
 
 			const resultsFound = document.createElement('p');
 			resultsFound.classList.add('results-found');
 			resultsFound.textContent = 'Results Found: ' + Object.keys(storedEndpoints).length;
-			document.body.appendChild(resultsFound);
+			teamContainer.prepend(resultsFound);
 		});
 	});
-
-
 }
 
 const team = {};
@@ -156,13 +155,13 @@ function renderData(data, cardContainer, traversalContainer) {
 		console.log('img src=', pokeImg.src);
 
 		// hide all cards but first
-		if (index !== 0) {
-			card.style.display = 'none';
-		}
+		// if (index !== 0) {
+		// 	card.style.display = 'none';
+		// }
 
 
 		let pokemonName = document.createElement('h3');
-		pokemonName.textContent = item.name;
+		pokemonName.textContent = index + ': ' + item.name;
 
 		const pokemonDisplay = document.createElement('div');
 		pokemonDisplay.classList.add('pokemon-display');
@@ -178,26 +177,30 @@ function renderData(data, cardContainer, traversalContainer) {
 				card.appendChild(abilityInfo);
 			}
 		});
+
+		const addButton = document.createElement('button');
+		addButton.classList.add('add-button');
+		addButton.textContent = 'Add to Team';
 	});
 	cardContainer.appendChild(traversalContainer);
 	return cardContainer;
 }
 
-function switchCard(cardContainer, direction) {
-	const cards = Array.from(cardContainer.querySelectorAll('.data-card'));
-	const currentCardIndex = cards.findIndex(card => card.style.display !== 'none');
-	let nextCardIndex = currentCardIndex + direction;
+// function switchCard(cardContainer, direction) {
+// 	const cards = Array.from(cardContainer.querySelectorAll('.data-card'));
+// 	const currentCardIndex = cards.findIndex(card => card.style.display !== 'none');
+// 	let nextCardIndex = currentCardIndex + direction;
 
-	let filteredEndpoints = Object.values(storedEndpoints).filter(pokemon => pokemon.name.includes(searchInput.value));
+// 	let filteredEndpoints = Object.values(storedEndpoints).filter(pokemon => pokemon.name.includes(searchInput.value));
 
-	if (nextCardIndex < 0) {
-		nextCardIndex = filteredEndpoints.length - 1; // Wrap around to the last card
-	} else if (nextCardIndex >= filteredEndpoints.length) {
-		nextCardIndex = 0; // Wrap around to the first card
-	}
+// 	if (nextCardIndex < 0) {
+// 		nextCardIndex = filteredEndpoints.length - 1; // Wrap around to the last card
+// 	} else if (nextCardIndex >= filteredEndpoints.length) {
+// 		nextCardIndex = 0; // Wrap around to the first card
+// 	}
 
-	cards[currentCardIndex].style.display = 'none';
-	cards[nextCardIndex].style.display = 'block';
-	console.log('siwtching cards.');
-}
+// 	cards[currentCardIndex].style.display = 'none';
+// 	cards[nextCardIndex].style.display = 'block';
+// 	console.log('siwtching cards.');
+// }
 
