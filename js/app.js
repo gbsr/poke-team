@@ -245,6 +245,7 @@ function renderData(data, cardContainer) {
 		// add buttons to the cards
 		const teamContainer = document.querySelector('.team-container');
 		if (teamContainer) {
+			console.log('creating remove button');
 			const removeButton = document.createElement('button');
 			removeButton.classList.add('remove-btn');
 			removeButton.textContent = '-';
@@ -262,7 +263,6 @@ function renderData(data, cardContainer) {
 			addButton.classList.add('add-btn');
 			addButton.textContent = '+';
 			abilityContainer.appendChild(addButton);
-			card.appendChild(abilityContainer);
 			addButton.addEventListener('pointerdown', function () {
 				team[item.name] = item;
 				localStorage.setItem('team', JSON.stringify(team));
@@ -271,6 +271,7 @@ function renderData(data, cardContainer) {
 			});
 		}
 
+		card.appendChild(abilityContainer);
 
 	});
 	return cardContainer;
