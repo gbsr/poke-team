@@ -57,7 +57,10 @@ function searchPokemons(searchInput) {
 						localStorage.setItem('storedEndpoints', JSON.stringify(storedEndpoints)); // Save to localStorage
 						return storedEndpoints[endpoint];
 					})
-					.catch(error => console.error('Error:', error));
+					.catch(error => {
+						console.error('Error:', error);
+						return Promise.reject(error); // Return a rejected promise
+					});
 			} else {
 				return Promise.resolve(storedEndpoints[endpoint]); // Return a promise that resolves to storedEndpoints[endpoint]
 			}
@@ -76,13 +79,51 @@ getTeam().then(team => {
 
 const manageTeamBtn = document.querySelector('.btn-team');
 manageTeamBtn.addEventListener('pointerdown', function () {
-	let teamContainer = renderData(team, 'Current Team');
-	document.body.appendChild(teamContainer);
+	createTeamView();
+
 });
 
 
 // create static elements for the card container
 const { cardContainer } = buildCardContainer();
+
+function createTeamView() {
+	// first we wipe the board
+	const dataCardContainer = document.querySelector('.data-cardContainer');
+	const themeContainer = document.querySelector('.theme.container');
+
+	if (dataCardContainer) {
+		dataCardContainer.remove();
+	}
+
+	if (themeContainer) {
+		themeContainer.remove();
+	}
+
+	// then we construct the team view
+	// first the container, if it doesn't exist
+
+	let teamContainer = document.querySelector('.team-container');
+	if (!teamContainer) {
+		teamContainer = document.createElement('div');
+		teamContainer.classList.add('team-container');
+		document.body.appendChild(teamContainer);
+		const mainTeamMembers = document.createElement('h3');
+		mainTeamMembers.textContent = 'Main Team Members';
+		teamContainer.appendChild(mainTeamMembers);
+	}
+	const team = JSON.parse(localStorage.getItem('team'));
+	if (!team || Object.keys(team).length === 0) {
+
+		const textContent = document.createElement('p');
+		textContent.textContent = 'You have no pokemons in your team.';
+		teamContainer.appendChild(textContent);
+	}
+
+	else {
+		renderData(Object.values(team), teamContainer);
+	}
+}
 
 function buildCardContainer() {
 
@@ -122,12 +163,6 @@ function renderData(data, cardContainer) {
 		// pokeImg.src = item.sprites.front_default;
 		console.log('img src=', pokeImg.src);
 
-		// hide all cards but first
-		// if (index !== 0) {
-		// 	card.style.display = 'none';
-		// }
-
-
 		let pokemonName = document.createElement('h3');
 		pokemonName.textContent = index + ': ' + item.name;
 
@@ -154,6 +189,12 @@ function renderData(data, cardContainer) {
 		addButton.textContent = '+';
 		abilityContainer.appendChild(addButton);
 		card.appendChild(abilityContainer);
+		addButton.addEventListener('pointerdown', function () {
+			team[item.name] = item;
+			localStorage.setItem('team', JSON.stringify(team));
+			console.log('team:', team);
+			card.remove();
+		});
 	});
 	return cardContainer;
 }
