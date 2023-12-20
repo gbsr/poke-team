@@ -89,6 +89,9 @@ form {
 .team-container {
 	background: var(--background-color);
 	box-shadow: 0px 0px 1px var(--primary-color);
+	position: absolute;
+	transform: translateY(12rem);
+	color: var(--text-color);
 }
 
 .data-card {
@@ -161,6 +164,12 @@ p {
 	background: var(--primary-color);
 	color: black;
 	text-shadow: 0px 0px 20px var(--text-color);
+}
+
+.close-btn {
+	position: absolute;
+	top: 0;
+	right: 0;
 }
 
 .h2-bg {

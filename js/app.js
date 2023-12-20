@@ -77,6 +77,41 @@ getTeam().then(team => {
 	console.log('team gathered. Team consist of:', team);
 });
 
+// make the team list and the reserve list to pass to renderData for rendering the entire team
+function makeTeamLists(team) {
+	// If team is not an object, handle it appropriately
+	if (typeof team !== 'object' || team === null) {
+		console.log('Team is not an object');
+		return { mainTeamMembers: {}, reserves: {} };
+	}
+
+	// Convert the team object to an array of its values
+	const teamArray = Object.values(team);
+
+	// If team has less than 3 members, all members are main team members
+	if (teamArray.length < 3) {
+		return { mainTeamMembers: team, reserves: {} };
+	}
+
+	// Create mainTeamMembers and reserves objects
+	const mainTeamMembers = {};
+	const reserves = {};
+
+	// Add the first 3 members to mainTeamMembers and the rest to reserves
+	Object.entries(team).forEach(([key, value], index) => {
+		if (index < 3) {
+			mainTeamMembers[key] = value;
+		} else {
+			reserves[key] = value;
+		}
+	});
+
+	console.log('mainTeamMembers:', mainTeamMembers);
+	console.log('reserves:', reserves);
+
+	return { mainTeamMembers, reserves };
+}
+
 const manageTeamBtn = document.querySelector('.btn-team');
 manageTeamBtn.addEventListener('pointerdown', function () {
 	createTeamView();
@@ -88,10 +123,13 @@ manageTeamBtn.addEventListener('pointerdown', function () {
 const { cardContainer } = buildCardContainer();
 
 function createTeamView() {
-	// first we wipe the board
+	const team = JSON.parse(localStorage.getItem('team'));
+	const { mainTeamMembers, reserves } = makeTeamLists(team);
+
 	const dataCardContainer = document.querySelector('.data-cardContainer');
 	const themeContainer = document.querySelector('.theme.container');
 
+	// first we clear the board
 	if (dataCardContainer) {
 		dataCardContainer.remove();
 	}
@@ -102,28 +140,42 @@ function createTeamView() {
 
 	// then we construct the team view
 	// first the container, if it doesn't exist
-
 	let teamContainer = document.querySelector('.team-container');
 	if (!teamContainer) {
 		teamContainer = document.createElement('div');
 		teamContainer.classList.add('team-container');
 		document.body.appendChild(teamContainer);
-		const mainTeamMembers = document.createElement('h3');
-		mainTeamMembers.textContent = 'Main Team Members';
-		teamContainer.appendChild(mainTeamMembers);
-	}
-	const team = JSON.parse(localStorage.getItem('team'));
-	if (!team || Object.keys(team).length === 0) {
 
+		const closeTeamBtn = document.createElement('button');
+		closeTeamBtn.classList.add('close-btn');
+		closeTeamBtn.textContent = 'X';
+		teamContainer.appendChild(closeTeamBtn);
+
+		const mainTeamMembersHeader = document.createElement('h3');
+		mainTeamMembersHeader.textContent = 'Main Team Members';
+		teamContainer.appendChild(mainTeamMembersHeader);
+	}
+
+	// Create separate containers for the main team members and reserves
+	const mainTeamMembersContainer = document.createElement('div');
+	mainTeamMembersContainer.classList.add('main-team-members-container');
+	teamContainer.appendChild(mainTeamMembersContainer);
+
+	const reservesContainer = document.createElement('div');
+	reservesContainer.classList.add('reserves-container');
+	teamContainer.appendChild(reservesContainer);
+
+	if (!team || Object.keys(team).length === 0) {
 		const textContent = document.createElement('p');
 		textContent.textContent = 'You have no pokemons in your team.';
 		teamContainer.appendChild(textContent);
-	}
-
-	else {
-		renderData(Object.values(team), teamContainer);
+	} else {
+		// Pass the containers to renderData
+		renderData(mainTeamMembers, mainTeamMembersContainer);
+		renderData(reserves, reservesContainer);
 	}
 }
+
 
 function buildCardContainer() {
 
@@ -138,6 +190,10 @@ function renderData(data, cardContainer) {
 	// clear before running
 	cardContainer.innerHTML = '';
 
+	// If data is an object (but not null), convert it to an array
+	if (typeof data === 'object' && data !== null) {
+		data = Object.values(data);
+	}
 	let firstAvailableImage = null;
 
 	// create the cards for each data item
