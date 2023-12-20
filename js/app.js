@@ -135,7 +135,7 @@ function createTeamView() {
 	}
 
 	if (themeContainer) {
-		themeContainer.remove();
+		themeContainer.classList.add('.-container-hidden');
 	}
 
 	// then we construct the team view
@@ -161,6 +161,10 @@ function createTeamView() {
 	mainTeamMembersContainer.classList.add('main-team-members-container');
 	teamContainer.appendChild(mainTeamMembersContainer);
 
+
+	const reserveseHaader = document.createElement('h3');
+	reserveseHaader.textContent = 'Reserve Team Members';
+	teamContainer.appendChild(reserveseHaader);
 	const reservesContainer = document.createElement('div');
 	reservesContainer.classList.add('reserves-container');
 	teamContainer.appendChild(reservesContainer);
@@ -175,7 +179,6 @@ function createTeamView() {
 		renderData(reserves, reservesContainer);
 	}
 }
-
 
 function buildCardContainer() {
 
@@ -239,18 +242,36 @@ function renderData(data, cardContainer) {
 				abilityContainer.appendChild(abilityInfo);
 			}
 		});
+		// add buttons to the cards
+		const teamContainer = document.querySelector('.team-container');
+		if (teamContainer) {
+			const removeButton = document.createElement('button');
+			removeButton.classList.add('remove-btn');
+			removeButton.textContent = '-';
+			abilityContainer.appendChild(removeButton);
+			removeButton.addEventListener('pointerdown', function () {
+				delete team[item.name];
+				localStorage.setItem('team', JSON.stringify(team));
+				console.log('team:', team);
+				card.remove();
+			});
+		}
 
-		const addButton = document.createElement('button');
-		addButton.classList.add('add-btn');
-		addButton.textContent = '+';
-		abilityContainer.appendChild(addButton);
-		card.appendChild(abilityContainer);
-		addButton.addEventListener('pointerdown', function () {
-			team[item.name] = item;
-			localStorage.setItem('team', JSON.stringify(team));
-			console.log('team:', team);
-			card.remove();
-		});
+		if (!teamContainer) {
+			const addButton = document.createElement('button');
+			addButton.classList.add('add-btn');
+			addButton.textContent = '+';
+			abilityContainer.appendChild(addButton);
+			card.appendChild(abilityContainer);
+			addButton.addEventListener('pointerdown', function () {
+				team[item.name] = item;
+				localStorage.setItem('team', JSON.stringify(team));
+				console.log('team:', team);
+				card.remove();
+			});
+		}
+
+
 	});
 	return cardContainer;
 }

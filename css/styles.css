@@ -24,10 +24,16 @@ input {
 	font-size: 22px;
 }
 
-h2 {
+h2,
+h3 {
 	margin: 0;
 	padding: 0;
 	color: var(--text-color);
+}
+
+h3 {
+	padding: 1rem;
+	font-weight: 900;
 }
 
 form {
@@ -59,7 +65,8 @@ form {
 	color: var(--text-color);
 }
 
-.add-btn {
+.add-btn,
+.remove-btn {
 	align-self: flex-end;
 	border-radius: 0.35rem;
 	border: 1px solid black;
@@ -154,7 +161,8 @@ p {
 	transform: translateY(-1.5rem);
 }
 
-.btn {
+.btn,
+.close-btn {
 	flex-grow: 0;
 	flex-shrink: 0;
 	border-radius: 0.35rem;
@@ -247,8 +255,12 @@ form {
 	max-width: 50rem;
 	margin: 0 auto;
 	padding: 0 calc(1rem + 5vw);
-
+	display: block;
 	overflow: hidden;
+}
+
+.container-hidden {
+	display: none;
 }
 
 .colorswab {
