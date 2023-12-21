@@ -40,7 +40,7 @@ let storedEndpoints = JSON.parse(localStorage.getItem('storedEndpoints')) || {};
 // TODO: Limit search to minimum of 3 characters
 
 function searchPokemons(searchInput) {
-	document.getElementById('search').addEventListener('submit', function (event) {
+	document.getElementById('searchForm').addEventListener('submit', function (event) {
 		event.preventDefault();
 		let searchResults = JSON.parse(localStorage.getItem('pokemons'));
 		let filteredResults = searchResults.results.filter(pokemon => pokemon.name.includes(searchInput.value));
@@ -83,14 +83,6 @@ function makeTeamLists(team) {
 	if (typeof team !== 'object' || team === null) {
 		console.log('Team is not an object');
 		return { mainTeamMembers: {}, reserves: {} };
-	}
-
-	// Convert the team object to an array of its values
-	const teamArray = Object.values(team);
-
-	// If team has less than 3 members, all members are main team members
-	if (teamArray.length < 3) {
-		return { mainTeamMembers: team, reserves: {} };
 	}
 
 	// Create mainTeamMembers and reserves objects
