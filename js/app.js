@@ -31,7 +31,6 @@ fetchPokemons('https://pokeapi.co/api/v2/pokemon?limit=100000').then(() => {
 const searchInput = document.querySelector('.searchInput');
 const searchButton = document.querySelector('.submit');
 
-let filteredResults;
 searchPokemons(searchInput);
 
 let storedEndpoints = JSON.parse(localStorage.getItem('storedEndpoints')) || {};
@@ -43,7 +42,7 @@ function searchPokemons(searchInput) {
 	document.getElementById('searchForm').addEventListener('submit', function (event) {
 		event.preventDefault();
 		let searchResults = JSON.parse(localStorage.getItem('pokemons'));
-		let filteredResults = searchResults.results.filter(pokemon => pokemon.name.includes(searchInput.value));
+		let filteredResults = searchResults.results.filter(pokemon => pokemon.name.includes(searchInput.value.toLowerCase()));
 		let endpoints = filteredResults.map(pokemon => `https://pokeapi.co/api/v2/pokemon/${pokemon.name}/`);
 
 
