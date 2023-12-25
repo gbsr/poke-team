@@ -45,14 +45,18 @@ function searchPokemons(searchInput) {
 		let filteredResults = searchResults.results.filter(pokemon => pokemon.name.includes(searchInput.value.toLowerCase()));
 		let endpoints = filteredResults.map(pokemon => `https://pokeapi.co/api/v2/pokemon/${pokemon.name}/`);
 
-
 		// waits for all the promises to resolve
 		Promise.all(endpoints.map(endpoint => {
 			if (!storedEndpoints[endpoint]) {
 				return fetch(endpoint)
 					.then(response => response.json())
 					.then(data => {
-						storedEndpoints[endpoint] = data;
+						// Only store the front_sprite, abilities, and name properties
+						storedEndpoints[endpoint] = {
+							front_sprite: data.sprites.front_default,
+							abilities: data.abilities,
+							name: data.name
+						};
 						localStorage.setItem('storedEndpoints', JSON.stringify(storedEndpoints)); // Save to localStorage
 						return storedEndpoints[endpoint];
 					})
@@ -65,224 +69,55 @@ function searchPokemons(searchInput) {
 			}
 		})).then((storedEndpoints) => {
 			// and then we can use it
-			let resultsRendered = renderData(Object.values(storedEndpoints), cardContainer);
+			let resultsRendered = renderData(Object.values(storedEndpoints));
 			document.body.appendChild(resultsRendered);
 		});
 	});
 }
 
-const team = {};
-getTeam().then(team => {
-	console.log('team gathered. Team consist of:', team);
-});
+function renderData(data) {
+	let resultsRendered = document.createDocumentFragment();
+	data.forEach(pokemon => {
+		// create elements
+		let card = createElement('div', 'card', '');
+		let cardImage = createElement('img', 'pokemon-display', '');
+		cardImage.src = pokemon.front_sprite || 'No-Image-Placeholder.png';
+		let cardTitle = createElement('h2', 'card-title', pokemon.name);
+		let cardText = createElement('p', 'card-text', '');
+		let cardAbilities = createElement('ul', 'card-abilities', '');
 
-// make the team list and the reserve list to pass to renderData for rendering the entire team
-function makeTeamLists(team) {
-	// If team is not an object, handle it appropriately
-	if (typeof team !== 'object' || team === null) {
-		console.log('Team is not an object');
-		return { mainTeamMembers: {}, reserves: {} };
-	}
-
-	// Create mainTeamMembers and reserves objects
-	const mainTeamMembers = {};
-	const reserves = {};
-
-	// Add the first 3 members to mainTeamMembers and the rest to reserves
-	Object.entries(team).forEach(([key, value], index) => {
-		if (index < 3) {
-			mainTeamMembers[key] = value;
-		} else {
-			reserves[key] = value;
-		}
-	});
-
-	console.log('mainTeamMembers:', mainTeamMembers);
-	console.log('reserves:', reserves);
-
-	return { mainTeamMembers, reserves };
-}
-
-const manageTeamBtn = document.querySelector('.btn-team');
-manageTeamBtn.addEventListener('pointerdown', function () {
-	createTeamView();
-
-});
-
-
-// create static elements for the card container
-const { cardContainer } = buildCardContainer();
-
-function createTeamView() {
-	const team = JSON.parse(localStorage.getItem('team'));
-	const { mainTeamMembers, reserves } = makeTeamLists(team);
-
-	const dataCardContainer = document.querySelector('.data-cardContainer');
-	const themeContainer = document.querySelector('.theme.container');
-
-	// first we clear the board
-	if (dataCardContainer) {
-		dataCardContainer.remove();
-	}
-
-	if (themeContainer) {
-		themeContainer.classList.add('.-container-hidden');
-	}
-
-	// then we construct the team view
-	// first the container, if it doesn't exist
-	let teamContainer = document.querySelector('.team-container');
-	if (!teamContainer) {
-		teamContainer = document.createElement('div');
-		teamContainer.classList.add('team-container');
-		document.body.appendChild(teamContainer);
-
-		const closeTeamBtn = document.createElement('button');
-		closeTeamBtn.classList.add('close-btn');
-		closeTeamBtn.textContent = 'X';
-		teamContainer.appendChild(closeTeamBtn);
-
-		const mainTeamMembersHeader = document.createElement('h3');
-		mainTeamMembersHeader.textContent = 'Main Team Members';
-		teamContainer.appendChild(mainTeamMembersHeader);
-	}
-
-	// Create separate containers for the main team members and reserves
-	const mainTeamMembersContainer = document.createElement('div');
-	mainTeamMembersContainer.classList.add('main-team-members-container');
-	teamContainer.appendChild(mainTeamMembersContainer);
-
-
-	const reserveseHaader = document.createElement('h3');
-	reserveseHaader.textContent = 'Reserve Team Members';
-	teamContainer.appendChild(reserveseHaader);
-	const reservesContainer = document.createElement('div');
-	reservesContainer.classList.add('reserves-container');
-	teamContainer.appendChild(reservesContainer);
-
-	if (!team || Object.keys(team).length === 0) {
-		const textContent = document.createElement('p');
-		textContent.textContent = 'You have no pokemons in your team.';
-		teamContainer.appendChild(textContent);
-	} else {
-		// Pass the containers to renderData
-		renderData(mainTeamMembers, mainTeamMembersContainer);
-		renderData(reserves, reservesContainer);
-	}
-}
-
-function buildCardContainer() {
-
-	// container for the cards
-	const cardContainer = document.createElement('div');
-	cardContainer.classList.add('data-cardContainer');
-	return { cardContainer };
-}
-
-function renderData(data, cardContainer) {
-
-	// clear before running
-	cardContainer.innerHTML = '';
-
-	// If data is an object (but not null), convert it to an array
-	if (typeof data === 'object' && data !== null) {
-		data = Object.values(data);
-	}
-	let firstAvailableImage = null;
-
-	// create the cards for each data item
-	data.forEach((item, index) => {
-		const card = document.createElement('div');
-		card.classList.add('data-card');
-
-		cardContainer.appendChild(card);
-		const pokeImg = document.createElement('img');
-		pokeImg.classList.add('pokeImg');
-		// image error handling because API inconsistency >.<
-		if (item.sprites.front_default) {
-			pokeImg.src = item.sprites.front_default;
-
-			// Update firstAvailableImage when you find the first image URL
-			if (!firstAvailableImage) {
-				firstAvailableImage = item.sprites.front_default;
-			}
-		} else {
-			// Use firstAvailableImage as the default image URL
-			pokeImg.src = firstAvailableImage;
-		}
-		// pokeImg.src = item.sprites.front_default;
-		console.log('img src=', pokeImg.src);
-
-		let pokemonName = document.createElement('h3');
-		pokemonName.textContent = index + ': ' + item.name;
-
-		const pokemonDisplay = document.createElement('div');
-		pokemonDisplay.classList.add('pokemon-display');
-		pokemonDisplay.appendChild(pokemonName);
-		pokemonDisplay.appendChild(pokeImg);
-
-		card.appendChild(pokemonDisplay);
-
-		const abilityContainer = document.createElement('div');
-		abilityContainer.classList.add('ability-container');
-
-		item.abilities.forEach(ability => {
-			if (ability && ability.ability) {
-				let abilityInfo = document.createElement('p');
-				abilityInfo.textContent = ability.ability.name;
-				abilityContainer.appendChild(abilityInfo);
-			}
+		cardText.textContent = 'Abilities:';
+		pokemon.abilities.forEach(ability => {
+			let abilityItem = createElement('li', 'ability-item', ability.ability.name);
+			cardAbilities.appendChild(abilityItem);
 		});
-		// add buttons to the cards
-		const teamContainer = document.querySelector('.team-container');
-		if (teamContainer) {
-			console.log('creating remove button');
-			const removeButton = document.createElement('button');
-			removeButton.classList.add('remove-btn');
-			removeButton.textContent = '-';
-			abilityContainer.appendChild(removeButton);
-			removeButton.addEventListener('pointerdown', function () {
-				delete team[item.name];
-				localStorage.setItem('team', JSON.stringify(team));
-				console.log('team:', team);
-				card.remove();
-			});
-		}
+		// add abilities to their container
+		let abilitiesContainer = createElement('div', 'abilities-container', '');
+		abilitiesContainer.appendChild(cardAbilities);
 
-		if (!teamContainer) {
-			const addButton = document.createElement('button');
-			addButton.classList.add('add-btn');
-			addButton.textContent = '+';
-			abilityContainer.appendChild(addButton);
-			addButton.addEventListener('pointerdown', function () {
-				team[item.name] = item;
-				localStorage.setItem('team', JSON.stringify(team));
-				console.log('team:', team);
-				card.remove();
-			});
-		}
+		let addToTeamButton = createElement('button', 'add-btn', '+');
+		addToTeamButton.addEventListener('pointerdown', function () {
+			let mainTeam = localStorage.getItem('mainTeam') ? JSON.parse(localStorage.getItem('mainTeam')) : [];
+			let reserveTeam = localStorage.getItem('reserveTeam') ? JSON.parse(localStorage.getItem('reserveTeam')) : [];
 
-		card.appendChild(abilityContainer);
+			// if mainTeam is less than 3, add to mainTeam, else add to reserveTeam.
+			if (mainTeam.length < 3) {
+				mainTeam.push(pokemon);
+				localStorage.setItem('mainTeam', JSON.stringify(mainTeam));
+			} else {
+				reserveTeam.push(pokemon);
+				localStorage.setItem('reserveTeam', JSON.stringify(reserveTeam));
+			}
+			card.remove();
+		});
+		abilitiesContainer.appendChild(addToTeamButton);
 
+		// build element structure
+		card.appendChild(cardImage);
+		card.appendChild(cardTitle);
+		card.appendChild(cardText);
+		card.appendChild(abilitiesContainer);
+		resultsRendered.appendChild(card);
 	});
-	return cardContainer;
+	return resultsRendered;
 }
-
-// function switchCard(cardContainer, direction) {
-// 	const cards = Array.from(cardContainer.querySelectorAll('.data-card'));
-// 	const currentCardIndex = cards.findIndex(card => card.style.display !== 'none');
-// 	let nextCardIndex = currentCardIndex + direction;
-
-// 	let filteredEndpoints = Object.values(storedEndpoints).filter(pokemon => pokemon.name.includes(searchInput.value));
-
-// 	if (nextCardIndex < 0) {
-// 		nextCardIndex = filteredEndpoints.length - 1; // Wrap around to the last card
-// 	} else if (nextCardIndex >= filteredEndpoints.length) {
-// 		nextCardIndex = 0; // Wrap around to the first card
-// 	}
-
-// 	cards[currentCardIndex].style.display = 'none';
-// 	cards[nextCardIndex].style.display = 'block';
-// 	console.log('siwtching cards.');
-// }
-

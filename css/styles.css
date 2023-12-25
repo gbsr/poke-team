@@ -80,6 +80,22 @@ form {
 	font-size: 1.2rem;
 }
 
+.remove-btn {
+	width: 80px;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	background: red !important;
+
+	/* font-size: 2rem; */
+}
+
+.abilities-container {
+	display: flex;
+	flex-direction: row;
+	justify-content: space-between;
+}
+
 .data-cardContainer,
 .team-container {
 	margin: 0 auto;
@@ -101,7 +117,9 @@ form {
 	color: var(--text-color);
 }
 
-.data-card {
+.card {
+	display: flex;
+	flex-direction: column;
 	margin-top: 1rem;
 	padding: 0.5rem;
 	border-radius: 0.35rem;
