@@ -100,9 +100,8 @@ form {
 .team-container {
 	margin: 0 auto;
 	width: 100%;
-	max-height: 350px;
 	overflow-y: scroll;
-	max-width: 22rem;
+	/* max-width: 22rem; */
 	padding: 1rem;
 	gap: 1rem;
 	border-radius: 0.35rem;
@@ -110,10 +109,13 @@ form {
 }
 
 .team-container {
+	display: grid;
+	grid-template-columns: repeat(3, 1fr);
+	gap: 1rem;
+	max-width: 75rem;
+	margin: 0 auto;
 	background: var(--background-color);
 	box-shadow: 0px 0px 1px var(--primary-color);
-	position: absolute;
-	transform: translateY(12rem);
 	color: var(--text-color);
 }
 
@@ -132,12 +134,6 @@ form {
 	display: flex;
 	justify-items: space-between;
 	flex-direction: column;
-}
-
-.teamContainer,
-.btn-row {
-	display: flex;
-	justify-content: center;
 }
 
 p {
@@ -249,6 +245,20 @@ p {
 	display: none;
 }
 
+#searchForm {
+	position: sticky;
+	top: 3rem;
+	padding: 1rem;
+	z-index: 1000;
+	background: var(--background-color);
+	width: 100%;
+}
+
+.searchResults {
+	position: relative;
+	top: 8rem;
+}
+
 .searchField,
 label {
 	color: var(--text-color);
@@ -274,7 +284,7 @@ form {
 	margin: 0 auto;
 	padding: 0 calc(1rem + 5vw);
 	display: block;
-	overflow: hidden;
+	/* overflow: hidden; */
 }
 
 .container-hidden {
@@ -311,6 +321,11 @@ form {
 	background: var(--text-color);
 }
 
+.btn-row {
+	display: flex;
+	justify-content: center;
+}
+
 .text-example {
 	color: var(--text-color);
 	background: var(--background-color);
@@ -320,8 +335,16 @@ form {
 	box-shadow: 0px 0px 4px black;
 }
 
-@media (max-width: 780px) {
+@media (max-width: 600px) {
 	.header-content {
 		flex-direction: column;
+	}
+
+	.team-container {
+		grid-template-columns: 1fr;
+	}
+	.btn-row {
+		flex-direction: column;
+		align-items: center;
 	}
 }

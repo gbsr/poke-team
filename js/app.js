@@ -70,13 +70,17 @@ function searchPokemons(searchInput) {
 		})).then((storedEndpoints) => {
 			// and then we can use it
 			let resultsRendered = renderData(Object.values(storedEndpoints));
-			document.body.appendChild(resultsRendered);
+			document.getElementById('resultsContainer').appendChild(resultsRendered);
+			// document.body.appendChild(resultsRendered);
 		});
 	});
 }
 
 function renderData(data) {
+	// creates a minimal offscreen DOM tree. We use this to prevent multiple reflows <3
 	let resultsRendered = document.createDocumentFragment();
+	let teamContainer = createElement('div', 'team-container', '');
+
 	data.forEach(pokemon => {
 		// create elements
 		let card = createElement('div', 'card', '');
@@ -119,5 +123,6 @@ function renderData(data) {
 		card.appendChild(abilitiesContainer);
 		resultsRendered.appendChild(card);
 	});
-	return resultsRendered;
+	teamContainer.appendChild(resultsRendered);
+	return teamContainer;
 }
