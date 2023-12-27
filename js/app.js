@@ -139,12 +139,13 @@ manageTeamBtn.addEventListener('pointerdown', function () {
 function manageTeamRender() {
 	let mainTeam = localStorage.getItem('mainTeam') ? JSON.parse(localStorage.getItem('mainTeam')) : [];
 	let reserveTeam = localStorage.getItem('reserveTeam') ? JSON.parse(localStorage.getItem('reserveTeam')) : [];
-	let team = mainTeam.concat(reserveTeam);
 
-	let teamRendered = renderData(team);
-	if (document.querySelector('.team-container') ? document.querySelector('.team-container').remove() : null);
-	document.getElementById('resultsContainer').appendChild(teamRendered);
-	if (team.length < 3) {
+	let mainTeamRendered = renderData(mainTeam);
+	let reserveTeamRendered = renderData(reserveTeam);
+	if (document.querySelector('.team-container') && document.querySelector('.team-container').remove());
+	document.getElementById('resultsContainer').appendChild(mainTeamRendered);
+	document.getElementById('resultsContainer').appendChild(reserveTeamRendered);
+	if (mainTeam.length < 3) {
 		document.getElementById('resultsContainer').prepend(createElement('label', 'team-warning', 'You need at least 3 pokemon in your team!'));
 	}
 } 
