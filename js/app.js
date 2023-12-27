@@ -29,7 +29,7 @@ fetchPokemons('https://pokeapi.co/api/v2/pokemon?limit=100000').then(() => {
 });
 
 const searchInput = document.querySelector('.searchInput');
-const searchButton = document.querySelector('.submit');
+// const searchButton = document.querySelector('.submit');
 
 searchPokemons(searchInput);
 
@@ -44,6 +44,11 @@ function searchPokemons(searchInput) {
 		let searchResults = JSON.parse(localStorage.getItem('pokemons'));
 		let filteredResults = searchResults.results.filter(pokemon => pokemon.name.includes(searchInput.value.toLowerCase()));
 		let endpoints = filteredResults.map(pokemon => `https://pokeapi.co/api/v2/pokemon/${pokemon.name}/`);
+
+		// whenever we hit submit we check if team-warning exists and remove it
+		document.querySelector('.team-warning') && document.querySelector('.team-warning').remove();
+		// and here we do the same for the teamcontainer also, since we want to switch between views
+		document.querySelector('.team-container') && document.querySelector('.team-container').remove();
 
 		// waits for all the promises to resolve
 		Promise.all(endpoints.map(endpoint => {
@@ -71,7 +76,6 @@ function searchPokemons(searchInput) {
 			// and then we can use it
 			let resultsRendered = renderData(Object.values(storedEndpoints));
 			document.getElementById('resultsContainer').appendChild(resultsRendered);
-			// document.body.appendChild(resultsRendered);
 		});
 	});
 }
@@ -126,3 +130,21 @@ function renderData(data) {
 	teamContainer.appendChild(resultsRendered);
 	return teamContainer;
 }
+
+const manageTeamBtn = document.querySelector('.btn-team');
+manageTeamBtn.addEventListener('pointerdown', function () {
+	manageTeamRender();
+});
+
+function manageTeamRender() {
+	let mainTeam = localStorage.getItem('mainTeam') ? JSON.parse(localStorage.getItem('mainTeam')) : [];
+	let reserveTeam = localStorage.getItem('reserveTeam') ? JSON.parse(localStorage.getItem('reserveTeam')) : [];
+	let team = mainTeam.concat(reserveTeam);
+
+	let teamRendered = renderData(team);
+	if (document.querySelector('.team-container') ? document.querySelector('.team-container').remove() : null);
+	document.getElementById('resultsContainer').appendChild(teamRendered);
+	if (team.length < 3) {
+		document.getElementById('resultsContainer').prepend(createElement('label', 'team-warning', 'You need at least 3 pokemon in your team!'));
+	}
+} 
