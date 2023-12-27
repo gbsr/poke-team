@@ -38,9 +38,13 @@ async function fetchPokemons(URL) {
 	}
 }
 
-function createElement(type, className, text) {
+// classNAme = '' is a default parameter, if no className is passed, it will be an empty string
+// this is to make className an optional parameter
+function createElement(type, className = '', text) {
 	const element = document.createElement(type);
-	element.classList.add(className);
+	if (className) {
+		element.classList.add(className);
+	}
 	element.textContent = text;
 	return element;
 }

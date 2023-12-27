@@ -343,6 +343,13 @@ form {
 	.team-container {
 		grid-template-columns: 1fr;
 	}
+
+	.team-title {
+		/* start at grid line 1, end at the last line in the grid */
+		/* shorthand for grid-column-start, and grid-column-end */
+		grid-column: 1 / -1;
+		text-align: center !important;
+	}
 	.btn-row {
 		flex-direction: column;
 		align-items: center;

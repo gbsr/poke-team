@@ -141,11 +141,30 @@ function manageTeamRender() {
 	let reserveTeam = localStorage.getItem('reserveTeam') ? JSON.parse(localStorage.getItem('reserveTeam')) : [];
 
 	let mainTeamRendered = renderData(mainTeam);
+	let mainTeamTitle = createElement('h2', '', 'Main Team:');
+	// because of how convoluted the css is, we need to set the grid-column manually
+	// TODO: clean up CSS because damn haha!
+	mainTeamTitle.style.gridColumn = "1 / -1";
+	mainTeamTitle.style.textAlign = "center";
+
+	mainTeamRendered.prepend(mainTeamTitle);
+
+
+
 	let reserveTeamRendered = renderData(reserveTeam);
-	if (document.querySelector('.team-container') && document.querySelector('.team-container').remove());
+	let reserveTeamTitle = createElement('h2', 'team-title', 'Reserve Team:');
+	// same here then
+	reserveTeamTitle.style.gridColumn = "1 / -1";
+	reserveTeamTitle.style.textAlign = "center";
+
+	reserveTeamRendered.prepend(reserveTeamTitle); // Append the title to reserveTeamRendered before it's added to the DOM
+
+	// remove the team container if it exists already
+	if (document.querySelector('.team-container')) document.querySelector('.team-container').remove();
 	document.getElementById('resultsContainer').appendChild(mainTeamRendered);
 	document.getElementById('resultsContainer').appendChild(reserveTeamRendered);
+
 	if (mainTeam.length < 3) {
 		document.getElementById('resultsContainer').prepend(createElement('label', 'team-warning', 'You need at least 3 pokemon in your team!'));
 	}
-} 
+}
