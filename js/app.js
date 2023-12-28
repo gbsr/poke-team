@@ -196,7 +196,9 @@ manageTeamBtn.addEventListener('pointerdown', function () {
 function manageTeamRender() {
 	let mainTeam = localStorage.getItem('mainTeam') ? JSON.parse(localStorage.getItem('mainTeam')) : [];
 	let reserveTeam = localStorage.getItem('reserveTeam') ? JSON.parse(localStorage.getItem('reserveTeam')) : [];
+	let container = document.querySelector('.container');
 	console.log('clicked');
+	container.remove();
 
 	let mainTeamContainer = document.querySelector('.mainTeam-container');
 	if (!mainTeamContainer) {
