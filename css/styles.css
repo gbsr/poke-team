@@ -5,6 +5,18 @@
 	--background-color: #000018;
 	--text-color: #87ceeb;
 }
+/* to avoid slight off-centering in certain mobile browsers */
+/* Hide scrollbar for Chrome, Safari and Opera */
+body::-webkit-scrollbar {
+	display: none;
+}
+
+/* Hide scrollbar for IE, Edge and Firefox */
+body {
+	-ms-overflow-style: none; /* IE and Edge */
+	scrollbar-width: none; /* Firefox */
+}
+
 .--primary-color {
 	background: var(--primary-color);
 }
@@ -271,12 +283,23 @@ form {
 	opacity: 0.99;
 }
 
-.container,
+.container {
+	max-width: 50rem;
+	width: 98%;
+	margin: 0 auto;
+	display: flex;
+	justify-content: center;
+	/* overflow: hidden; */
+}
+
+.render,
 .mainTeam-container,
 .reserveTeam-container {
 	max-width: 50rem;
 	margin: 0 auto;
-	display: block;
+	display: grid;
+	/* Create a 3-column grid by default, because big screen */
+	grid-template-columns: repeat(3, 1fr);
 	/* overflow: hidden; */
 }
 
@@ -289,13 +312,16 @@ form {
 	justify-content: center;
 }
 
+/* media queries ----------------------------------------------------------- */
 @media (max-width: 600px) {
 	.header-content {
 		flex-direction: column;
 	}
 
+	.render,
 	.mainTeam-container,
 	.reserveTeam-container {
+		/* reduce grid columns to one because small screen */
 		grid-template-columns: 1fr;
 	}
 

@@ -86,7 +86,7 @@ function renderData(data, isTeamView = false, className) {
 	let container = document.createElement('div');
 
 	// Use the provided classname, or 'container' if no classname is provided
-	container.className = className || 'container';
+	container.className = className || 'render';
 
 	data.forEach(pokemon => {
 		// create elements
