@@ -44,6 +44,8 @@ function searchPokemons(searchInput) {
 		let searchResults = JSON.parse(localStorage.getItem('pokemons'));
 		let filteredResults = searchResults.results.filter(pokemon => pokemon.name.includes(searchInput.value.toLowerCase()));
 		let endpoints = filteredResults.map(pokemon => `https://pokeapi.co/api/v2/pokemon/${pokemon.name}/`);
+		let render = document.querySelector('.render');
+		if (render) render.remove();
 
 		// whenever we hit submit we check if team-warning exists and remove it
 		document.querySelector('.team-warning') && document.querySelector('.team-warning').remove();
@@ -190,15 +192,25 @@ function renderData(data, isTeamView = false, className) {
 
 const manageTeamBtn = document.querySelector('.btn-team');
 manageTeamBtn.addEventListener('pointerdown', function () {
+	const resultsContainer = document.getElementById('resultsContainer');
+	if (resultsContainer) {
+		resultsContainer.innerHTML = '';
+		console.log('trying to clear results');
+	}
 	manageTeamRender();
 });
 
-function manageTeamRender() {
+function manageTeamRender(searchContainer) {
+
+	let teamWarning = document.querySelector('.team-warning');
+	if (teamWarning) teamWarning.remove();
+
 	let mainTeam = localStorage.getItem('mainTeam') ? JSON.parse(localStorage.getItem('mainTeam')) : [];
 	let reserveTeam = localStorage.getItem('reserveTeam') ? JSON.parse(localStorage.getItem('reserveTeam')) : [];
-	let container = document.querySelector('.container');
 	console.log('clicked');
-	container.remove();
+	// in case we want to clear the entire search container completely, keeping this for reference
+	// let container = document.querySelector('.container');
+	// if (container) container.remove();
 
 	let mainTeamContainer = document.querySelector('.mainTeam-container');
 	if (!mainTeamContainer) {
@@ -232,7 +244,22 @@ function manageTeamRender() {
 	reserveTeamRendered.prepend(reserveTeamTitle);
 	reserveTeamContainer.appendChild(reserveTeamRendered);
 
-	if (mainTeam.length < 3) {
-		document.getElementById('resultsContainer').prepend(createElement('label', 'team-warning', 'You need at least 3 pokemon in your team!'));
+	let resultsContainer = document.getElementById('resultsContainer');
+	if (resultsContainer && mainTeam.length < 3) {
+		resultsContainer.prepend(createElement('label', 'team-warning', 'You need at least 3 pokemon in your team!'));
 	}
+	if (!resultsContainer && mainTeam.length < 3) {
+		let teamWarning = createElement('label', 'team-warning', 'You need at least 3 pokemon in your team!');
+		teamWarning.style.gridColumn = "1 / -1";
+		teamWarning.style.textAlign = "center";
+		let header = document.querySelector('header');
+		// if header exists, insert the warning after the header element
+		if (header) header.insertAdjacentElement('afterend', teamWarning);
+	}
+
+	if (mainTeam.length === 0) {
+		mainTeamContainer.remove();
+		reserveTeamContainer.remove();
+	}
+
 }
