@@ -158,6 +158,8 @@ manageTeamBtn.addEventListener('pointerdown', function () {
 		resultsContainer.innerHTML = '';
 		console.log('trying to clear results');
 	}
+	const pokemonTeamManager = document.querySelector('.pokemon-team-manager');
+	if (pokemonTeamManager) pokemonTeamManager.remove();
 	manageTeamRender();
 });
 

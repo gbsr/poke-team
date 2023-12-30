@@ -191,10 +191,14 @@ form {
 /* end search --------------------------------------------------------------- */
 
 /* card ---------------------------------------------------------------------*/
-
+.pokemon-display {
+	display: flex;
+	justify-content: center;
+	/* height: 50%; */
+}
 .pokemon-display img {
-	height: 100%;
-	width: 100%;
+	/* height: 50%; */
+	width: 50%;
 	object-fit: contain;
 }
 /* buttons */
@@ -308,8 +312,8 @@ form {
 .theme,
 #searchForm {
 	position: sticky;
-	top: 0;
-	padding: 1rem;
+	top: -1rem;
+	/* padding: 1rem; */
 	z-index: 1000;
 	background: var(--background-color);
 	width: 100%;
@@ -340,11 +344,6 @@ form {
 	display: none;
 }
 
-.btn-row {
-	display: flex;
-	justify-content: center;
-}
-
 /* media queries ----------------------------------------------------------- */
 @media (max-width: 600px) {
 	.header-content {
@@ -362,11 +361,6 @@ form {
 		/* shorthand for grid-column-start, and grid-column-end */
 		grid-column: 1 / -1;
 		text-align: center !important;
-	}
-
-	.btn-row {
-		flex-direction: column;
-		align-items: center;
 	}
 }
 
