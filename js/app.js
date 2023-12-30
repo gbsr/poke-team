@@ -41,6 +41,19 @@ let storedEndpoints = JSON.parse(localStorage.getItem('storedEndpoints')) || {};
 function searchPokemons(searchInput) {
 	document.getElementById('searchForm').addEventListener('submit', function (event) {
 		event.preventDefault();
+
+		// clear teamView when issuing search
+		let mainTeamContainer = document.querySelector('.mainTeam-container');
+		let reserveTeamContainer = document.querySelector('.reserveTeam-container');
+
+		if (mainTeamContainer) {
+			mainTeamContainer.remove();
+		}
+
+		if (reserveTeamContainer) {
+			reserveTeamContainer.remove();
+		}
+
 		let searchResults = JSON.parse(localStorage.getItem('pokemons'));
 		let filteredResults = searchResults.results.filter(pokemon => pokemon.name.includes(searchInput.value.toLowerCase()));
 		let endpoints = filteredResults.map(pokemon => `https://pokeapi.co/api/v2/pokemon/${pokemon.name}/`);
