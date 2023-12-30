@@ -93,7 +93,7 @@ function renderData(data, isTeamView = false, className) {
 
 	data.forEach(pokemon => {
 		// create elements
-		let { card, abilitiesContainer, cardImage, cardTitle, cardText } = constructAbilities(pokemon);
+		let { card, abilitiesContainer, pokemonDisplay, cardTitle, cardText } = constructAbilities(pokemon);
 
 		// decide which button to add depending on which view we are currently in
 		if (isTeamView) {
@@ -106,7 +106,7 @@ function renderData(data, isTeamView = false, className) {
 		}
 
 		// build element structure
-		constructElements(card, cardImage, cardTitle, cardText, abilitiesContainer, resultsRendered);
+		constructElements(card, pokemonDisplay, cardTitle, cardText, abilitiesContainer, resultsRendered);
 	});
 	container.appendChild(resultsRendered);
 	return container;
@@ -124,8 +124,10 @@ manageTeamBtn.addEventListener('pointerdown', function () {
 
 function constructAbilities(pokemon) {
 	let card = createElement('div', 'card', '');
-	let cardImage = createElement('img', 'pokemon-display', '');
+	let pokemonDisplay = createElement('div', 'pokemon-display', '');
+	let cardImage = createElement('img', '', '');
 	cardImage.src = pokemon.front_sprite || 'No-Image-Placeholder.png';
+	pokemonDisplay.appendChild(cardImage);
 	let cardTitle = createElement('h2', 'card-title', pokemon.name);
 	let cardText = createElement('p', 'card-text', '');
 	let cardAbilities = createElement('ul', 'card-abilities', '');
@@ -138,7 +140,7 @@ function constructAbilities(pokemon) {
 	// add abilities to their container
 	let abilitiesContainer = createElement('div', 'abilities-container', '');
 	abilitiesContainer.appendChild(cardAbilities);
-	return { card, abilitiesContainer, cardImage, cardTitle, cardText };
+	return { card, abilitiesContainer, pokemonDisplay, cardTitle, cardText };
 }
 
 function handleTeamView(pokemon, card, abilitiesContainer) {
@@ -215,8 +217,8 @@ function clearView() {
 	return { mainTeamContainer, reserveTeamContainer };
 }
 
-function constructElements(card, cardImage, cardTitle, cardText, abilitiesContainer, resultsRendered) {
-	card.appendChild(cardImage);
+function constructElements(card, pokemonDisplay, cardTitle, cardText, abilitiesContainer, resultsRendered) {
+	card.appendChild(pokemonDisplay);
 	card.appendChild(cardTitle);
 	card.appendChild(cardText);
 	card.appendChild(abilitiesContainer);
