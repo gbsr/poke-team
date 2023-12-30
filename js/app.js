@@ -58,13 +58,35 @@ function searchPokemons(searchInput) {
 				return fetch(endpoint)
 					.then(response => response.json())
 					.then(data => {
-						// Only store the front_sprite, abilities, and name properties
 						storedEndpoints[endpoint] = {
 							front_sprite: data.sprites.front_default,
 							abilities: data.abilities,
 							name: data.name
 						};
-						localStorage.setItem('storedEndpoints', JSON.stringify(storedEndpoints)); // Save to localStorage
+						try {
+							localStorage.setItem('storedEndpoints', JSON.stringify(storedEndpoints)); // Save to localStorage
+						}
+						// edgecase: localstorage quouta exceeded (most likely not)
+						catch (e) {
+							if (e.name === 'QuotaExceededError') {
+
+								// we save our team first, and provide a default value of null if they don't exist 
+								let mainTeam = localStorage.getItem('mainTeam') || '';
+								let reserveTeam = localStorage.getItem('reserveTeam') || '';
+
+								// Clear localStorage
+								localStorage.clear();
+
+								// Restore mainTeam and reserveTeam
+								if (mainTeam) localStorage.setItem('mainTeam', mainTeam);
+								if (reserveTeam) localStorage.setItem('reserveTeam', reserveTeam);
+
+								// Try to set the item again
+								localStorage.setItem('storedEndpoints', JSON.stringify(storedEndpoints));
+							} else {
+								throw e; // if some other error, let user know
+							}
+						}
 						return storedEndpoints[endpoint];
 					})
 					.catch(error => {
@@ -75,7 +97,6 @@ function searchPokemons(searchInput) {
 				return Promise.resolve(storedEndpoints[endpoint]); // Return a promise that resolves to storedEndpoints[endpoint]
 			}
 		})).then((storedEndpoints) => {
-			// and then we can use it
 			let resultsRendered = renderData(Object.values(storedEndpoints), false);
 			document.getElementById('resultsContainer').appendChild(resultsRendered);
 		});
