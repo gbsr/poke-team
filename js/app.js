@@ -127,7 +127,7 @@ function renderData(data, isTeamView = false, className) {
 
 	data.forEach(pokemon => {
 		// create elements
-		let { card, abilitiesContainer, pokemonDisplay, cardTitle, cardText } = constructAbilities(pokemon);
+		let { card, abilitiesContainer, pokemonDisplay, cardTitle, cardText } = constructCard(pokemon);
 
 		// decide which button to add depending on which view we are currently in
 		if (isTeamView) {
@@ -156,13 +156,23 @@ manageTeamBtn.addEventListener('pointerdown', function () {
 	manageTeamRender();
 });
 
-function constructAbilities(pokemon) {
+function constructCard(pokemon) {
 	let card = createElement('div', 'card', '');
 	let pokemonDisplay = createElement('div', 'pokemon-display', '');
 	let cardImage = createElement('img', '', '');
 	cardImage.src = pokemon.front_sprite || 'No-Image-Placeholder.png';
 	pokemonDisplay.appendChild(cardImage);
-	let cardTitle = createElement('h2', 'card-title', pokemon.name);
+
+	// Create an input field with the current name as the default value
+	let cardTitle = createElement('input', 'card-title', '');
+	cardTitle.value = pokemon.name;
+
+	// Add an event listener to the input field
+	cardTitle.addEventListener('input', function (event) {
+		// Update the name when the user changes the input value
+		pokemon.name = event.target.value;
+	});
+
 	let cardText = createElement('p', 'card-text', '');
 	let cardAbilities = createElement('ul', 'card-abilities', '');
 

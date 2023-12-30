@@ -106,20 +106,21 @@ input {
 	font-size: 22px;
 }
 
-p {
-	margin: -1rem 0.15rem;
-}
-
 h2,
 h3 {
 	padding: 0;
 	color: var(--text-color);
 }
 .card-title {
-	margin: -2rem 0.15rem;
+	margin: 0;
+	padding: 0;
+	border: none;
+	background: none;
+	/* outline: none; */
 }
+
 .card-text {
-	transform: translateY(2rem);
+	/* transform: translateY(2rem); */
 }
 .h2-bg {
 	color: var(--primary-color);
@@ -183,9 +184,6 @@ form {
 /* end search --------------------------------------------------------------- */
 
 /* card ---------------------------------------------------------------------*/
-.pokemon-display {
-	height: 25%;
-}
 
 .pokemon-display img {
 	height: 100%;
@@ -232,6 +230,7 @@ form {
 	display: flex;
 	flex-direction: row;
 	justify-content: space-between;
+	height: 10rem;
 }
 
 .card {
