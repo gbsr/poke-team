@@ -106,6 +106,13 @@ input {
 	font-size: 22px;
 }
 
+p {
+	color: var(--text-color);
+}
+
+.spacer {
+	height: 2rem;
+}
 h2,
 h3 {
 	padding: 0;

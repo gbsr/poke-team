@@ -45,6 +45,7 @@ function searchPokemons(searchInput) {
 		// clear teamView when issuing search
 		let mainTeamContainer = document.querySelector('.mainTeam-container');
 		let reserveTeamContainer = document.querySelector('.reserveTeam-container');
+		let pokemonTeamManager = document.querySelector('.pokemon-team-manager');
 
 		if (mainTeamContainer) {
 			mainTeamContainer.remove();
@@ -52,6 +53,10 @@ function searchPokemons(searchInput) {
 
 		if (reserveTeamContainer) {
 			reserveTeamContainer.remove();
+		}
+
+		if (pokemonTeamManager) {
+			pokemonTeamManager.remove();
 		}
 
 		let searchResults = JSON.parse(localStorage.getItem('pokemons'));
