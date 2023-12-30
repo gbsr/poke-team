@@ -145,6 +145,7 @@ function constructAbilities(pokemon) {
 
 function handleTeamView(pokemon, card, abilitiesContainer) {
 	let button = createElement('button', 'remove-btn', '-');
+	button.title = 'Remove from team';
 	button.addEventListener('pointerdown', function () {
 		let mainTeam = localStorage.getItem('mainTeam') ? JSON.parse(localStorage.getItem('mainTeam')) : [];
 		let reserveTeam = localStorage.getItem('reserveTeam') ? JSON.parse(localStorage.getItem('reserveTeam')) : [];
@@ -192,6 +193,7 @@ function handleTeamView(pokemon, card, abilitiesContainer) {
 
 function handleSearchView(pokemon, card, abilitiesContainer) {
 	let button = createElement('button', 'add-btn', '+');
+	button.title = 'Add to team';
 	button.addEventListener('pointerdown', function () {
 		let mainTeam = localStorage.getItem('mainTeam') ? JSON.parse(localStorage.getItem('mainTeam')) : [];
 		let reserveTeam = localStorage.getItem('reserveTeam') ? JSON.parse(localStorage.getItem('reserveTeam')) : [];
@@ -225,7 +227,7 @@ function constructElements(card, pokemonDisplay, cardTitle, cardText, abilitiesC
 	resultsRendered.appendChild(card);
 }
 
-function manageTeamRender(searchContainer) {
+function manageTeamRender() {
 
 	let teamWarning = document.querySelector('.team-warning');
 	if (teamWarning) teamWarning.remove();
@@ -256,7 +258,7 @@ function manageTeamRender(searchContainer) {
 	}
 
 	let mainTeamRendered = renderData(mainTeam, true);
-	let mainTeamTitle = createElement('h2', '', 'Main Team:');
+	let mainTeamTitle = createElement('h2', 'team-title', 'Main Team:');
 	mainTeamTitle.style.gridColumn = "1 / -1";
 	mainTeamTitle.style.textAlign = "center";
 	mainTeamRendered.prepend(mainTeamTitle);
