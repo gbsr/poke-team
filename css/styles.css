@@ -217,12 +217,18 @@ form {
 .card {
 	display: flex;
 	flex-direction: column;
+	width: 16rem;
 	margin-top: 1rem;
 	padding: 0.5rem;
 	border-radius: 0.35rem;
 	background: #141414;
 	color: var(--text-color);
 	box-shadow: 0px 0px 1px var(--primary-color);
+}
+
+.mainTeam-container > .render,
+.reserveTeam-container > .render {
+	grid-column: 1 / -1;
 }
 /* end card ------------------------------------------------ */
 
@@ -292,10 +298,10 @@ form {
 	/* overflow: hidden; */
 }
 
-.render,
 .mainTeam-container,
 .reserveTeam-container {
 	max-width: 50rem;
+	padding-top: 1rem;
 	margin: 0 auto;
 	display: grid;
 	/* Create a 3-column grid by default, because big screen */
@@ -318,7 +324,6 @@ form {
 		flex-direction: column;
 	}
 
-	.render,
 	.mainTeam-container,
 	.reserveTeam-container {
 		/* reduce grid columns to one because small screen */
@@ -335,5 +340,13 @@ form {
 	.btn-row {
 		flex-direction: column;
 		align-items: center;
+	}
+}
+
+@media (min-width: 600px) {
+	.render {
+		display: grid;
+		grid-template-columns: repeat(3, 1fr);
+		grid-gap: 10px;
 	}
 }

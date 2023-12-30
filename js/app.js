@@ -89,6 +89,7 @@ function renderData(data, isTeamView = false, className) {
 
 	// Use the provided classname, or 'container' if no classname is provided
 	container.className = className || 'render';
+	// if (className === 'render') container.style.gridColumn = "1 / -1";
 
 	data.forEach(pokemon => {
 		// create elements
@@ -230,14 +231,14 @@ function manageTeamRender(searchContainer) {
 		reserveTeamContainer.innerHTML = '';
 	}
 
-	let mainTeamRendered = renderData(mainTeam, true, 'mainTeam-container');
+	let mainTeamRendered = renderData(mainTeam, true);
 	let mainTeamTitle = createElement('h2', '', 'Main Team:');
 	mainTeamTitle.style.gridColumn = "1 / -1";
 	mainTeamTitle.style.textAlign = "center";
 	mainTeamRendered.prepend(mainTeamTitle);
 	mainTeamContainer.appendChild(mainTeamRendered);
 
-	let reserveTeamRendered = renderData(reserveTeam, true, 'reserveTeam-container');
+	let reserveTeamRendered = renderData(reserveTeam, true);
 	let reserveTeamTitle = createElement('h2', 'team-title', 'Reserve Team:');
 	reserveTeamTitle.style.gridColumn = "1 / -1";
 	reserveTeamTitle.style.textAlign = "center";
