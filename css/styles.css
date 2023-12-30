@@ -343,7 +343,7 @@ form {
 	}
 }
 
-@media (min-width: 600px) {
+@media (min-width: 840px) {
 	.render {
 		display: grid;
 		grid-template-columns: repeat(3, 1fr);

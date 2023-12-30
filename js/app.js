@@ -87,105 +87,26 @@ function renderData(data, isTeamView = false, className) {
 	let resultsRendered = document.createDocumentFragment();
 	let container = document.createElement('div');
 
-	// Use the provided classname, or 'container' if no classname is provided
+	// Use the provided classname, or 'render' if no classname is provided
 	container.className = className || 'render';
 	// if (className === 'render') container.style.gridColumn = "1 / -1";
 
 	data.forEach(pokemon => {
 		// create elements
-		let card = createElement('div', 'card', '');
-		let cardImage = createElement('img', 'pokemon-display', '');
-		cardImage.src = pokemon.front_sprite || 'No-Image-Placeholder.png';
-		let cardTitle = createElement('h2', 'card-title', pokemon.name);
-		let cardText = createElement('p', 'card-text', '');
-		let cardAbilities = createElement('ul', 'card-abilities', '');
-
-		cardText.textContent = 'Abilities:';
-		pokemon.abilities.forEach(ability => {
-			let abilityItem = createElement('li', 'ability-item', ability.ability.name);
-			cardAbilities.appendChild(abilityItem);
-		});
-		// add abilities to their container
-		let abilitiesContainer = createElement('div', 'abilities-container', '');
-		abilitiesContainer.appendChild(cardAbilities);
+		let { card, abilitiesContainer, cardImage, cardTitle, cardText } = constructAbilities(pokemon);
 
 		// decide which button to add depending on which view we are currently in
 		if (isTeamView) {
 			// in team view we want to be able to remove the pokemon from the team
-			let button = createElement('button', 'remove-btn', '-');
-			button.addEventListener('pointerdown', function () {
-				let mainTeam = localStorage.getItem('mainTeam') ? JSON.parse(localStorage.getItem('mainTeam')) : [];
-				let reserveTeam = localStorage.getItem('reserveTeam') ? JSON.parse(localStorage.getItem('reserveTeam')) : [];
-
-				// if the pokemon is in mainTeam, remove it from mainTeam, else remove it from reserveTeam.
-				let mainTeamIndex = mainTeam.findIndex(p => p.name === pokemon.name);
-				let reserveTeamIndex = reserveTeam.findIndex(p => p.name === pokemon.name);
-
-				if (mainTeamIndex !== -1) {
-					mainTeam.splice(mainTeamIndex, 1);
-					console.log(pokemon.name + ' removed from mainTeam');
-
-					// If there are any pokemons in the reserveTeam, move the first one to the mainTeam
-					if (reserveTeam.length > 0) {
-						// remove first element from reserveTeam and add it to mainTeam
-						let movedPokemon = reserveTeam.shift();
-						mainTeam.push(movedPokemon);
-						console.log('movedPokemon:', movedPokemon);
-						localStorage.setItem('reserveTeam', JSON.stringify(reserveTeam));
-					}
-
-					localStorage.setItem('mainTeam', JSON.stringify(mainTeam));
-				} else if (reserveTeamIndex !== -1) {
-					reserveTeam.splice(reserveTeamIndex, 1);
-					localStorage.setItem('reserveTeam', JSON.stringify(reserveTeam));
-				}
-
-				// remove pokemon so you can't select it again
-				card.remove();
-
-				// Clear the content of the team containers
-				let mainTeamContainer = document.querySelector('.mainTeam-container');
-				let reserveTeamContainer = document.querySelector('.reserveTeam-container');
-				mainTeamContainer.innerHTML = '';
-				reserveTeamContainer.innerHTML = '';
-
-				// Re-render the view
-				let mainTeamRendered = renderData(mainTeam, true, 'mainTeamContainer');
-				let reserveTeamRendered = renderData(reserveTeam, true, 'reserveTeamContainer');
-
-				// append the rendered teams to their respective containers
-				mainTeamContainer.appendChild(mainTeamRendered);
-				reserveTeamContainer.appendChild(reserveTeamRendered);
-				manageTeamRender();
-			});
-			abilitiesContainer.appendChild(button);
+			handleTeamView(pokemon, card, abilitiesContainer);
 		}
 		else {
 			// but in the search view we want to be able to add the pokemon to the team
-			let button = createElement('button', 'add-btn', '+');
-			button.addEventListener('pointerdown', function () {
-				let mainTeam = localStorage.getItem('mainTeam') ? JSON.parse(localStorage.getItem('mainTeam')) : [];
-				let reserveTeam = localStorage.getItem('reserveTeam') ? JSON.parse(localStorage.getItem('reserveTeam')) : [];
-
-				// if mainTeam is less than 3, add to mainTeam, else add to reserveTeam.
-				if (mainTeam.length < 3) {
-					mainTeam.push(pokemon);
-					localStorage.setItem('mainTeam', JSON.stringify(mainTeam));
-				} else {
-					reserveTeam.push(pokemon);
-					localStorage.setItem('reserveTeam', JSON.stringify(reserveTeam));
-				}
-				card.remove();
-			});
-			abilitiesContainer.appendChild(button);
+			handleSearchView(pokemon, card, abilitiesContainer);
 		}
 
 		// build element structure
-		card.appendChild(cardImage);
-		card.appendChild(cardTitle);
-		card.appendChild(cardText);
-		card.appendChild(abilitiesContainer);
-		resultsRendered.appendChild(card);
+		constructElements(card, cardImage, cardTitle, cardText, abilitiesContainer, resultsRendered);
 	});
 	container.appendChild(resultsRendered);
 	return container;
@@ -200,6 +121,107 @@ manageTeamBtn.addEventListener('pointerdown', function () {
 	}
 	manageTeamRender();
 });
+
+function constructAbilities(pokemon) {
+	let card = createElement('div', 'card', '');
+	let cardImage = createElement('img', 'pokemon-display', '');
+	cardImage.src = pokemon.front_sprite || 'No-Image-Placeholder.png';
+	let cardTitle = createElement('h2', 'card-title', pokemon.name);
+	let cardText = createElement('p', 'card-text', '');
+	let cardAbilities = createElement('ul', 'card-abilities', '');
+
+	cardText.textContent = 'Abilities:';
+	pokemon.abilities.forEach(ability => {
+		let abilityItem = createElement('li', 'ability-item', ability.ability.name);
+		cardAbilities.appendChild(abilityItem);
+	});
+	// add abilities to their container
+	let abilitiesContainer = createElement('div', 'abilities-container', '');
+	abilitiesContainer.appendChild(cardAbilities);
+	return { card, abilitiesContainer, cardImage, cardTitle, cardText };
+}
+
+function handleTeamView(pokemon, card, abilitiesContainer) {
+	let button = createElement('button', 'remove-btn', '-');
+	button.addEventListener('pointerdown', function () {
+		let mainTeam = localStorage.getItem('mainTeam') ? JSON.parse(localStorage.getItem('mainTeam')) : [];
+		let reserveTeam = localStorage.getItem('reserveTeam') ? JSON.parse(localStorage.getItem('reserveTeam')) : [];
+
+		// if the pokemon is in mainTeam, remove it from mainTeam, else remove it from reserveTeam.
+		let mainTeamIndex = mainTeam.findIndex(p => p.name === pokemon.name);
+		let reserveTeamIndex = reserveTeam.findIndex(p => p.name === pokemon.name);
+
+		if (mainTeamIndex !== -1) {
+			mainTeam.splice(mainTeamIndex, 1);
+			console.log(pokemon.name + ' removed from mainTeam');
+
+			// If there are any pokemons in the reserveTeam, move the first one to the mainTeam
+			if (reserveTeam.length > 0) {
+				// remove first element from reserveTeam and add it to mainTeam
+				let movedPokemon = reserveTeam.shift();
+				mainTeam.push(movedPokemon);
+				console.log('movedPokemon:', movedPokemon);
+				localStorage.setItem('reserveTeam', JSON.stringify(reserveTeam));
+			}
+
+			localStorage.setItem('mainTeam', JSON.stringify(mainTeam));
+		} else if (reserveTeamIndex !== -1) {
+			reserveTeam.splice(reserveTeamIndex, 1);
+			localStorage.setItem('reserveTeam', JSON.stringify(reserveTeam));
+		}
+
+		// remove pokemon so you can't select it again
+		card.remove();
+
+		// Clear the content of the team containers
+		let { mainTeamContainer, reserveTeamContainer } = clearView();
+
+		// Re-render the view
+		let mainTeamRendered = renderData(mainTeam, true, 'mainTeamContainer');
+		let reserveTeamRendered = renderData(reserveTeam, true, 'reserveTeamContainer');
+
+		// append the rendered teams to their respective containers
+		mainTeamContainer.appendChild(mainTeamRendered);
+		reserveTeamContainer.appendChild(reserveTeamRendered);
+		manageTeamRender();
+	});
+	abilitiesContainer.appendChild(button);
+}
+
+function handleSearchView(pokemon, card, abilitiesContainer) {
+	let button = createElement('button', 'add-btn', '+');
+	button.addEventListener('pointerdown', function () {
+		let mainTeam = localStorage.getItem('mainTeam') ? JSON.parse(localStorage.getItem('mainTeam')) : [];
+		let reserveTeam = localStorage.getItem('reserveTeam') ? JSON.parse(localStorage.getItem('reserveTeam')) : [];
+
+		// if mainTeam is less than 3, add to mainTeam, else add to reserveTeam.
+		if (mainTeam.length < 3) {
+			mainTeam.push(pokemon);
+			localStorage.setItem('mainTeam', JSON.stringify(mainTeam));
+		} else {
+			reserveTeam.push(pokemon);
+			localStorage.setItem('reserveTeam', JSON.stringify(reserveTeam));
+		}
+		card.remove();
+	});
+	abilitiesContainer.appendChild(button);
+}
+
+function clearView() {
+	let mainTeamContainer = document.querySelector('.mainTeam-container');
+	let reserveTeamContainer = document.querySelector('.reserveTeam-container');
+	mainTeamContainer.innerHTML = '';
+	reserveTeamContainer.innerHTML = '';
+	return { mainTeamContainer, reserveTeamContainer };
+}
+
+function constructElements(card, cardImage, cardTitle, cardText, abilitiesContainer, resultsRendered) {
+	card.appendChild(cardImage);
+	card.appendChild(cardTitle);
+	card.appendChild(cardText);
+	card.appendChild(abilitiesContainer);
+	resultsRendered.appendChild(card);
+}
 
 function manageTeamRender(searchContainer) {
 
